@@ -1,0 +1,947 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BatHub - Gotham's Code Repository</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e0e6ed;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .login-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            background: radial-gradient(circle at center, rgba(255, 215, 0, 0.1) 0%, transparent 70%);
+        }
+
+        .login-box {
+            background: rgba(0, 0, 0, 0.9);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 40px;
+            box-shadow: 0 0 30px rgba(255, 215, 0, 0.3);
+            text-align: center;
+            min-width: 400px;
+            backdrop-filter: blur(10px);
+        }
+
+        .bat-logo {
+            font-size: 4rem;
+            color: #ffd700;
+            margin-bottom: 20px;
+            text-shadow: 0 0 20px rgba(255, 215, 0, 0.5);
+        }
+
+        .login-title {
+            color: #ffd700;
+            font-size: 2rem;
+            margin-bottom: 30px;
+            font-weight: bold;
+            text-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #333;
+            border-radius: 8px;
+            color: #e0e6ed;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: #ffd700;
+            box-shadow: 0 0 15px rgba(255, 215, 0, 0.3);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px;
+            background: linear-gradient(45deg, #ffd700, #ffed4e);
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-size: 18px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-transform: uppercase;
+        }
+
+        .login-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(255, 215, 0, 0.4);
+        }
+
+        .main-container {
+            display: none;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: rgba(0, 0, 0, 0.9);
+            border-bottom: 2px solid #ffd700;
+            padding: 15px 30px;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+            backdrop-filter: blur(10px);
+        }
+
+        .logo {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #ffd700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 30px;
+            list-style: none;
+            margin-left: auto;
+            margin-right: 30px;
+        }
+
+        .nav-links a {
+            color: #e0e6ed;
+            text-decoration: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .nav-links a:hover {
+            background: rgba(255, 215, 0, 0.2);
+            color: #ffd700;
+        }
+
+        .logout-btn {
+            background: #dc3545;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .logout-btn:hover {
+            background: #c82333;
+        }
+
+        .content {
+            display: flex;
+            height: calc(100vh - 80px);
+        }
+
+        .sidebar {
+            width: 300px;
+            background: rgba(0, 0, 0, 0.8);
+            border-right: 2px solid #ffd700;
+            padding: 20px;
+        }
+
+        .repo-list {
+            list-style: none;
+        }
+
+        .repo-item {
+            background: rgba(255, 215, 0, 0.1);
+            margin-bottom: 10px;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid #ffd700;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .repo-item:hover {
+            background: rgba(255, 215, 0, 0.2);
+            transform: translateX(5px);
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .welcome-section {
+            background: rgba(0, 0, 0, 0.6);
+            padding: 30px;
+            border-radius: 15px;
+            border: 2px solid #ffd700;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .chatbot-container {
+            background: rgba(0, 0, 0, 0.8);
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 20px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .chatbot-header {
+            color: #ffd700;
+            font-size: 1.5rem;
+            margin-bottom: 20px;
+            text-align: center;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .chat-area {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.5);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            overflow-y: auto;
+            max-height: 400px;
+        }
+
+        .message {
+            margin-bottom: 15px;
+            padding: 10px;
+            border-radius: 8px;
+            max-width: 80%;
+        }
+
+        .user-message {
+            background: rgba(255, 215, 0, 0.2);
+            margin-left: auto;
+            text-align: right;
+        }
+
+        .bot-message {
+            background: rgba(0, 100, 200, 0.2);
+            border-left: 4px solid #ffd700;
+        }
+
+        .chat-input-container {
+            display: flex;
+            gap: 10px;
+        }
+
+        .chat-input {
+            flex: 1;
+            background: rgba(0, 0, 0, 0.7);
+            border: 2px solid #333;
+            border-radius: 8px;
+            padding: 12px;
+            color: #e0e6ed;
+            font-size: 16px;
+        }
+
+        .chat-input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .send-btn {
+            background: #ffd700;
+            color: #000;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s ease;
+        }
+
+        .send-btn:hover {
+            background: #ffed4e;
+            transform: translateY(-1px);
+        }
+
+        .error-message {
+            color: #ff6b6b;
+            text-align: center;
+            margin-top: 10px;
+            font-size: 14px;
+        }
+
+        .quick-commands {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .quick-cmd {
+            background: rgba(255, 215, 0, 0.2);
+            border: 1px solid #ffd700;
+            color: #ffd700;
+            padding: 5px 10px;
+            border-radius: 15px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .quick-cmd:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        .typing {
+            animation: pulse 1.5s infinite;
+        }
+    </style>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="loginContainer" class="login-container">
+        <div class="login-box">
+            <div class="bat-logo">🦇</div>
+            <h1 class="login-title">BatHub Access</h1>
+            <form id="loginForm">
+                <div class="input-group">
+                    <input type="text" id="username" class="input-field" placeholder="Username" required>
+                </div>
+                <div class="input-group">
+                    <input type="password" id="password" class="input-field" placeholder="Password" required>
+                </div>
+                <button type="submit" class="login-btn">Access Granted</button>
+                <div id="loginError" class="error-message"></div>
+            </form>
+            <p style="margin-top: 20px; font-size: 12px; color: #666;">
+                Demo credentials: batman / gotham123
+            </p>
+        </div>
+    </div>
+
+    <!-- Main Application -->
+    <div id="mainContainer" class="main-container">
+        <header class="header">
+            <div class="logo">
+                <span>🦇</span>
+                <span>BatHub</span>
+            </div>
+            <ul class="nav-links">
+                <li><a href="#" onclick="showRepositories()">Repositories</a></li>
+                <li><a href="#" onclick="showProjects()">Projects</a></li>
+                <li><a href="#" onclick="showIssues()">Issues</a></li>
+                <li><a href="#" onclick="showPullRequests()">Pull Requests</a></li>
+            </ul>
+            <button class="logout-btn" onclick="logout()">Logout</button>
+        </header>
+
+        <div class="content">
+            <aside class="sidebar">
+                <h3 style="color: #ffd700; margin-bottom: 20px;">🗂️ Repositories</h3>
+                <ul class="repo-list">
+                    <li class="repo-item">
+                        <strong>bat-signal-detector</strong>
+                        <br><small>Advanced signal processing system</small>
+                    </li>
+                    <li class="repo-item">
+                        <strong>batcave-security</strong>
+                        <br><small>Multi-layer security protocols</small>
+                    </li>
+                    <li class="repo-item">
+                        <strong>gotham-crime-analytics</strong>
+                        <br><small>Crime pattern analysis tools</small>
+                    </li>
+                    <li class="repo-item">
+                        <strong>batmobile-diagnostics</strong>
+                        <br><small>Vehicle monitoring system</small>
+                    </li>
+                </ul>
+            </aside>
+
+            <main class="main-content">
+                <section class="welcome-section">
+                    <h1>Welcome to the Batcave, Dark Knight! 🦇</h1>
+                    <p>Your secure development environment is ready. All systems are operational and Gotham is under watch.</p>
+                </section>
+
+                <section class="chatbot-container">
+                    <div class="chatbot-header">
+                        <span>🤖</span>
+                        <span>ALFRED - AI Assistant</span>
+                        <span>🦇</span>
+                    </div>
+
+                    <div class="quick-commands">
+                        <span class="quick-cmd" onclick="sendQuickCommand('solve 25 + 37 * 2')">🧮 Math</span>
+                        <span class="quick-cmd" onclick="sendQuickCommand('explain photosynthesis')">🔬 Science</span>
+                        <span class="quick-cmd" onclick="sendQuickCommand('temperature')">🌡️ Temperature</span>
+                        <span class="quick-cmd" onclick="sendQuickCommand('what is artificial intelligence')">🤖 AI Info</span>
+                        <span class="quick-cmd" onclick="sendQuickCommand('time')">⏰ Time</span>
+                        <span class="quick-cmd" onclick="sendQuickCommand('help with programming')">💻 Code Help</span>
+                        <span class="quick-cmd" onclick="sendQuickCommand('traffic')">🚦 Traffic</span>
+                        <span class="quick-cmd" onclick="sendQuickCommand('crime rate')">🚨 Crime Rate</span>
+                    </div>
+
+                    <div id="chatArea" class="chat-area">
+                        <div class="message bot-message">
+                            <strong>ALFRED:</strong> Good evening, Master Wayne. I'm your advanced AI assistant, capable of handling mathematics, science, programming, general knowledge, writing assistance, and much more. I can solve equations, explain complex concepts, help with coding, and engage in detailed discussions on virtually any topic. How may I assist you tonight?
+                        </div>
+                    </div>
+
+                    <div class="chat-input-container">
+                        <input type="text" id="chatInput" class="chat-input" placeholder="Ask ALFRED anything..." onkeypress="handleEnter(event)">
+                        <button class="send-btn" onclick="sendMessage()">Send</button>
+                    </div>
+                </section>
+            </main>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjs/11.11.0/math.min.js"></script>
+    <script>
+        // Credentials (in a real app, this would be handled securely on the server)
+        const validCredentials = {
+            username: 'batman',
+            password: 'gotham123'
+        };
+
+        // AI Responses Database
+        const aiResponses = {
+            'temperature': [
+                "Current temperature in Gotham City is 18°C (64°F). Perfect weather for patrol tonight, Master Wayne.",
+                "The temperature is 22°C (72°F). Quite pleasant for a night in Gotham.",
+                "It's currently 15°C (59°F). You might want to bring the thermal cape tonight."
+            ],
+            'traffic': [
+                "Traffic is light on the main arteries. The Batmobile can move freely through downtown Gotham.",
+                "Heavy congestion reported on Gotham Bridge. I suggest taking the underground tunnel route.",
+                "Traffic conditions are optimal. All major routes are clear for rapid deployment."
+            ],
+            'time': [
+                `Current time in Gotham City: ${new Date().toLocaleTimeString()}. The night is still young, Master Wayne.`,
+                `It is currently ${new Date().toLocaleTimeString()}. Perfect timing for your evening patrol.`,
+                `The time is ${new Date().toLocaleTimeString()}. Gotham's criminals won't expect you this early.`
+            ],
+            'crime rate': [
+                "Crime rates are down 23% this month thanks to your vigilant efforts, Master Wayne.",
+                "Petty crime has increased in the East End. Might require additional attention tonight.",
+                "Overall crime statistics show improvement, but organized crime activity has been detected in the warehouse district."
+            ],
+            'weather': [
+                "Clear skies with minimal cloud cover. Excellent visibility for surveillance work.",
+                "Light rain expected around midnight. The streets will be slick - drive carefully.",
+                "Foggy conditions developing. Perfect cover for stealth operations, but limited visibility."
+            ],
+            'news': [
+                "Wayne Enterprises stock is up 5%. The board is pleased with the quarterly results.",
+                "Commissioner Gordon held a press conference today praising the recent drop in crime rates.",
+                "The Gotham Gazette reports increased citizen confidence in city safety measures."
+            ],
+            'help': [
+                "I can provide information about temperature, traffic, time, crime rates, weather, and news. What would you like to know?",
+                "Available commands: temperature, traffic, time, crime rate, weather, news. How may I assist you tonight?",
+                "I'm here to help with city information and data analysis. What information do you require, Master Wayne?"
+            ]
+        };
+
+        // Default responses for unknown queries
+        const defaultResponses = [
+            "I'm not quite sure about that, Master Wayne. Could you try asking about temperature, traffic, time, crime rates, weather, or news?",
+            "My databases don't have that information readily available. Perhaps you could rephrase your query?",
+            "I'm still learning, Master Wayne. Try asking me about Gotham's current conditions or statistics.",
+            "That's beyond my current capabilities. I can help with city data, weather, and traffic information."
+        ];
+
+        // Login functionality
+        function handleLogin(e) {
+            e.preventDefault();
+            
+            const username = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value.trim();
+            const errorElement = document.getElementById('loginError');
+            
+            console.log('Login attempt:', username, password); // Debug log
+            
+            if (username === validCredentials.username && password === validCredentials.password) {
+                document.getElementById('loginContainer').style.display = 'none';
+                document.getElementById('mainContainer').style.display = 'block';
+                errorElement.textContent = '';
+                console.log('Login successful!'); // Debug log
+            } else {
+                errorElement.textContent = 'Access Denied. Invalid credentials.';
+                console.log('Login failed'); // Debug log
+            }
+        }
+        
+        // Add event listener when DOM is ready
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('loginForm').addEventListener('submit', handleLogin);
+        });
+
+        // Logout functionality
+        function logout() {
+            document.getElementById('mainContainer').style.display = 'none';
+            document.getElementById('loginContainer').style.display = 'flex';
+            document.getElementById('username').value = '';
+            document.getElementById('password').value = '';
+            document.getElementById('loginError').textContent = '';
+        }
+
+        // Chat functionality with multiple AI options
+        async function sendMessage() {
+            const input = document.getElementById('chatInput');
+            const message = input.value.trim();
+            
+            if (message) {
+                addMessage(message, 'user');
+                input.value = '';
+                
+                // Show typing indicator
+                addTypingIndicator();
+                
+                try {
+                    const response = await getAIResponse(message);
+                    removeTypingIndicator();
+                    addMessage(response, 'bot');
+                } catch (error) {
+                    removeTypingIndicator();
+                    addMessage("My apologies, Master Wayne. I'm having trouble connecting to my neural networks. Please try again.", 'bot');
+                }
+            }
+        }
+
+        async function sendQuickCommand(command) {
+            addMessage(command, 'user');
+            addTypingIndicator();
+            
+            try {
+                const response = await getAIResponse(command);
+                removeTypingIndicator();
+                addMessage(response, 'bot');
+            } catch (error) {
+                removeTypingIndicator();
+                addMessage("System error detected. Switching to backup protocols.", 'bot');
+            }
+        }
+
+        function addMessage(message, sender) {
+            const chatArea = document.getElementById('chatArea');
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            
+            if (sender === 'user') {
+                messageDiv.classList.add('user-message');
+                messageDiv.innerHTML = `<strong>You:</strong> ${message}`;
+            } else {
+                messageDiv.classList.add('bot-message');
+                messageDiv.innerHTML = `<strong>ALFRED:</strong> ${message}`;
+            }
+            
+            chatArea.appendChild(messageDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function addTypingIndicator() {
+            const chatArea = document.getElementById('chatArea');
+            const typingDiv = document.createElement('div');
+            typingDiv.classList.add('message', 'bot-message', 'typing');
+            typingDiv.id = 'typing-indicator';
+            typingDiv.innerHTML = `<strong>ALFRED:</strong> <span class="typing">Analyzing...</span>`;
+            chatArea.appendChild(typingDiv);
+            chatArea.scrollTop = chatArea.scrollHeight;
+        }
+
+        function removeTypingIndicator() {
+            const typing = document.getElementById('typing-indicator');
+            if (typing) typing.remove();
+        }
+
+        // Multiple AI API options - choose one and add your API key
+        async function getAIResponse(query) {
+            // Option 1: Hugging Face (Free tier available)
+            // return await getHuggingFaceResponse(query);
+            
+            // Option 2: Cohere (Free tier available)
+            // return await getCohereResponse(query);
+            
+            // Option 3: OpenAI-compatible APIs (many free options)
+            // return await getOpenAIResponse(query);
+            
+            // Option 4: Fallback to enhanced local responses
+            return getEnhancedLocalResponse(query);
+        }
+
+        // Option 1: Hugging Face Integration
+        async function getHuggingFaceResponse(query) {
+            const API_KEY = 'YOUR_HUGGING_FACE_API_KEY'; // Get free at https://huggingface.co/
+            
+            const response = await fetch('https://api-inference.huggingface.co/models/microsoft/DialoGPT-medium', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    inputs: `Master Wayne asks: ${query}. ALFRED responds:`,
+                    parameters: {
+                        max_length: 100,
+                        temperature: 0.7
+                    }
+                })
+            });
+            
+            const data = await response.json();
+            return data[0]?.generated_text || "I'm processing your request, Master Wayne.";
+        }
+
+        // Option 2: Cohere Integration  
+        async function getCohereResponse(query) {
+            const API_KEY = 'YOUR_COHERE_API_KEY'; // Get free at https://cohere.ai/
+            
+            const response = await fetch('https://api.cohere.ai/v1/generate', {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'command-light',
+                    prompt: `You are ALFRED, Batman's AI assistant. Respond to: ${query}`,
+                    max_tokens: 100,
+                    temperature: 0.7
+                })
+            });
+            
+            const data = await response.json();
+            return data.generations[0]?.text || "At your service, Master Wayne.";
+        }
+
+        // Option 3: OpenAI-compatible APIs (many free alternatives)
+        async function getOpenAIResponse(query) {
+            const API_KEY = 'YOUR_API_KEY';
+            const API_URL = 'https://api.openai.com/v1/chat/completions'; // or alternative endpoint
+            
+            const response = await fetch(API_URL, {
+                method: 'POST',
+                headers: {
+                    'Authorization': `Bearer ${API_KEY}`,
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    model: 'gpt-3.5-turbo',
+                    messages: [
+                        {
+                            role: 'system',
+                            content: 'You are ALFRED, Batman\'s loyal AI assistant. Respond in character with British politeness and Batman references.'
+                        },
+                        {
+                            role: 'user',
+                            content: query
+                        }
+                    ],
+                    max_tokens: 150,
+                    temperature: 0.8
+                })
+            });
+            
+            const data = await response.json();
+            return data.choices[0]?.message?.content || "I'm here to assist, Master Wayne.";
+        }
+
+        // Enhanced local responses with ChatGPT-like capabilities
+        function getEnhancedLocalResponse(query) {
+            const normalizedQuery = query.toLowerCase().trim();
+            
+            try {
+                // 1. MATH CALCULATIONS
+                if (isMathQuery(normalizedQuery)) {
+                    return handleMathQuery(query);
+                }
+                
+                // 2. PROGRAMMING QUESTIONS
+                if (isProgrammingQuery(normalizedQuery)) {
+                    return handleProgrammingQuery(normalizedQuery);
+                }
+                
+                // 3. SCIENCE QUESTIONS
+                if (isScienceQuery(normalizedQuery)) {
+                    return handleScienceQuery(normalizedQuery);
+                }
+                
+                // 4. GENERAL KNOWLEDGE
+                if (isGeneralKnowledgeQuery(normalizedQuery)) {
+                    return handleGeneralKnowledgeQuery(normalizedQuery);
+                }
+                
+                // 5. WRITING ASSISTANCE
+                if (isWritingQuery(normalizedQuery)) {
+                    return handleWritingQuery(normalizedQuery);
+                }
+                
+                // 6. PROBLEM SOLVING
+                if (isProblemSolvingQuery(normalizedQuery)) {
+                    return handleProblemSolvingQuery(normalizedQuery);
+                }
+                
+                // 7. CONVERSATIONAL RESPONSES
+                return handleConversationalQuery(normalizedQuery);
+                
+            } catch (error) {
+                return "I encountered an error processing that request, Master Wayne. Could you rephrase it?";
+            }
+        }
+
+        // Math Query Handler
+        function isMathQuery(query) {
+            const mathKeywords = ['calculate', 'solve', 'what is', 'how much', '+', '-', '*', '/', '=', 'math', 'equation', 'formula', 'square root', 'factorial', 'sin', 'cos', 'tan', 'log', 'derivative', 'integral'];
+            const hasNumbers = /\d/.test(query);
+            const hasMathOperators = /[\+\-\*\/\=\^\(\)]/.test(query);
+            
+            return mathKeywords.some(keyword => query.includes(keyword)) || (hasNumbers && hasMathOperators);
+        }
+
+        function handleMathQuery(query) {
+            try {
+                // Clean up the query for math evaluation
+                let mathExpression = query
+                    .replace(/what is|calculate|solve|how much is/gi, '')
+                    .replace(/\?/g, '')
+                    .trim();
+                
+                // Handle common math expressions
+                mathExpression = mathExpression
+                    .replace(/x/g, '*')
+                    .replace(/\^/g, '^')
+                    .replace(/square root of/gi, 'sqrt')
+                    .replace(/factorial of/gi, '!')
+                    .replace(/pi/gi, 'pi')
+                    .replace(/e/gi, 'e');
+                
+                // Try to evaluate with math.js
+                if (window.math) {
+                    const result = math.evaluate(mathExpression);
+                    return `The answer is ${result}, Master Wayne. My calculations are precise as always.`;
+                } else {
+                    // Fallback for basic arithmetic
+                    try {
+                        const result = Function(`"use strict"; return (${mathExpression})`)();
+                        return `The calculation yields ${result}, sir.`;
+                    } catch (e) {
+                        return "I can solve various mathematical problems including arithmetic, algebra, trigonometry, and calculus. Could you rephrase your mathematical query?";
+                    }
+                }
+            } catch (error) {
+                return "I encountered an error in my mathematical processors. Please check your equation format, Master Wayne.";
+            }
+        }
+
+        // Programming Query Handler
+        function isProgrammingQuery(query) {
+            const programmingKeywords = ['code', 'programming', 'javascript', 'python', 'html', 'css', 'function', 'variable', 'loop', 'array', 'object', 'algorithm', 'debug', 'syntax', 'class', 'method'];
+            return programmingKeywords.some(keyword => query.includes(keyword));
+        }
+
+        function handleProgrammingQuery(query) {
+            const programmingResponses = {
+                'javascript': "JavaScript is a versatile programming language. I can help with functions, objects, arrays, DOM manipulation, and more. What specific JavaScript concept interests you?",
+                'python': "Python is excellent for data analysis and automation - quite useful for crime pattern analysis. What Python topic would you like to explore?",
+                'html': "HTML structures web pages, much like how I structure the Batcave's systems. Need help with specific HTML elements or structure?",
+                'css': "CSS styles web interfaces beautifully. I can assist with selectors, layouts, animations, and responsive design.",
+                'function': "Functions are reusable code blocks. In JavaScript: function name(parameters) { return value; }. What function concept needs clarification?",
+                'algorithm': "Algorithms are step-by-step problem-solving procedures - like my crime-fighting protocols. Which algorithmic concept interests you?",
+                'debug': "Debugging is systematic error detection. Use console.log(), breakpoints, and logical reasoning. What's the specific issue you're encountering?"
+            };
+            
+            for (const [keyword, response] of Object.entries(programmingResponses)) {
+                if (query.includes(keyword)) {
+                    return response;
+                }
+            }
+            
+            return "I'm well-versed in multiple programming languages and development concepts. Could you be more specific about what programming topic you'd like to explore?";
+        }
+
+        // Science Query Handler
+        function isScienceQuery(query) {
+            const scienceKeywords = ['physics', 'chemistry', 'biology', 'gravity', 'force', 'energy', 'atom', 'molecule', 'cell', 'DNA', 'evolution', 'photosynthesis', 'electromagnetic', 'quantum'];
+            return scienceKeywords.some(keyword => query.includes(keyword));
+        }
+
+        function handleScienceQuery(query) {
+            const scienceResponses = {
+                'physics': "Physics governs everything from the Batmobile's aerodynamics to grappling hook trajectories. What physics concept interests you?",
+                'chemistry': "Chemistry is crucial for analyzing forensic evidence. Are you interested in molecular structures, reactions, or chemical properties?",
+                'biology': "Biology helps us understand life processes - useful for medical applications in the field. What biological topic intrigues you?",
+                'gravity': "Gravity accelerates objects at 9.8 m/s² on Earth. It affects everything from projectile motion to orbital mechanics.",
+                'energy': "Energy cannot be created or destroyed, only transformed - like converting potential energy in your grappling hook to kinetic energy.",
+                'DNA': "DNA contains genetic information in sequences of nucleotides. It's invaluable for forensic identification and biological analysis."
+            };
+            
+            for (const [keyword, response] of Object.entries(scienceResponses)) {
+                if (query.includes(keyword)) {
+                    return response;
+                }
+            }
+            
+            return "Science encompasses physics, chemistry, biology, and more. I can explain scientific concepts, formulas, and principles. What specific area interests you?";
+        }
+
+        // General Knowledge Handler
+        function isGeneralKnowledgeQuery(query) {
+            const knowledgeKeywords = ['what is', 'who is', 'when was', 'where is', 'why does', 'how does', 'explain', 'define', 'meaning of', 'history of'];
+            return knowledgeKeywords.some(keyword => query.includes(keyword));
+        }
+
+        function handleGeneralKnowledgeQuery(query) {
+            const knowledgeBase = {
+                'artificial intelligence': "AI involves creating systems that can perform tasks typically requiring human intelligence, like learning, reasoning, and problem-solving.",
+                'quantum computing': "Quantum computing uses quantum mechanical phenomena to process information, potentially solving certain problems exponentially faster than classical computers.",
+                'blockchain': "Blockchain is a distributed ledger technology that maintains a continuously growing list of records, secured using cryptography.",
+                'climate change': "Climate change refers to long-term shifts in global temperatures and weather patterns, primarily driven by human activities since the Industrial Revolution.",
+                'photosynthesis': "Photosynthesis is the process by which plants convert light energy into chemical energy, producing glucose and oxygen from carbon dioxide and water.",
+                'evolution': "Evolution is the process by which species change over time through natural selection, genetic drift, and other mechanisms."
+            };
+            
+            for (const [topic, explanation] of Object.entries(knowledgeBase)) {
+                if (query.includes(topic)) {
+                    return `${explanation} Would you like me to elaborate on any specific aspect?`;
+                }
+            }
+            
+            return "I have extensive knowledge across various domains. Could you be more specific about what you'd like to know? I can explain concepts, provide definitions, or discuss topics in detail.";
+        }
+
+        // Writing Assistance Handler
+        function isWritingQuery(query) {
+            const writingKeywords = ['write', 'essay', 'email', 'letter', 'report', 'summary', 'paragraph', 'sentence', 'grammar', 'spelling'];
+            return writingKeywords.some(keyword => query.includes(keyword));
+        }
+
+        function handleWritingQuery(query) {
+            return "I can assist with various writing tasks including essays, reports, emails, and creative writing. I can also help with grammar, structure, and style. What specific writing assistance do you need, Master Wayne?";
+        }
+
+        // Problem Solving Handler
+        function isProblemSolvingQuery(query) {
+            const problemKeywords = ['how to', 'solution', 'problem', 'issue', 'help me', 'step by step', 'guide', 'tutorial'];
+            return problemKeywords.some(keyword => query.includes(keyword));
+        }
+
+        function handleProblemSolvingQuery(query) {
+            return "I excel at breaking down complex problems into manageable steps. Please describe the specific challenge you're facing, and I'll provide a systematic approach to solve it.";
+        }
+
+        // Conversational Handler
+        function handleConversationalQuery(query) {
+            // Enhanced keyword matching with more topics
+            const conversationalResponses = {
+                greeting: {
+                    keywords: ['hello', 'hi', 'hey', 'good evening', 'greetings', 'how are you'],
+                    responses: [
+                        "Good evening, Master Wayne. I'm operating at full capacity and ready to assist with any questions or tasks.",
+                        "Hello, sir. My systems are online and I'm prepared to help with calculations, research, problem-solving, or conversation.",
+                        "Greetings, Master Wayne. Whether you need mathematical calculations, scientific explanations, or general assistance, I'm at your service."
+                    ]
+                },
+                capabilities: {
+                    keywords: ['what can you do', 'help', 'assist', 'capabilities', 'abilities'],
+                    responses: [
+                        "I can help with mathematics, science, programming, general knowledge, writing, problem-solving, and much more. I'm like a digital encyclopedia with computational abilities.",
+                        "My capabilities include solving mathematical problems, explaining scientific concepts, assisting with code, answering questions, and providing detailed explanations on virtually any topic.",
+                        "I can calculate, analyze, explain, solve problems, write, and engage in meaningful conversation across numerous domains of knowledge."
+                    ]
+                },
+                thanks: {
+                    keywords: ['thank', 'thanks', 'appreciate'],
+                    responses: [
+                        "You're most welcome, Master Wayne. It's my pleasure to assist you with any intellectual challenge.",
+                        "My pleasure, sir. I'm designed to be helpful, accurate, and informative.",
+                        "Always happy to help, Master Wayne. Feel free to ask me anything else."
+                    ]
+                }
+            };
+
+            // Check enhanced conversational responses
+            for (const [category, data] of Object.entries(conversationalResponses)) {
+                if (data.keywords.some(keyword => query.includes(keyword))) {
+                    return data.responses[Math.floor(Math.random() * data.responses.length)];
+                }
+            }
+
+            // Original keyword responses (weather, traffic, etc.)
+            for (const [keyword, responses] of Object.entries(aiResponses)) {
+                if (query.includes(keyword)) {
+                    return responses[Math.floor(Math.random() * responses.length)];
+                }
+            }
+
+            // Intelligent default responses
+            const intelligentDefaults = [
+                "That's an interesting topic, Master Wayne. Could you provide more details so I can give you a comprehensive answer?",
+                "I'd be happy to help with that. Could you be more specific about what aspect interests you most?",
+                "I can assist with that topic. What particular information or explanation would be most helpful?",
+                "That's within my capabilities to discuss. What specific questions do you have about it?",
+                "I'm ready to explore that subject with you. What would you like to know specifically?"
+            ];
+            
+            return intelligentDefaults[Math.floor(Math.random() * intelligentDefaults.length)];
+        }
+
+        function handleEnter(event) {
+            if (event.key === 'Enter') {
+                sendMessage();
+            }
+        }
+
+        // Navigation functions (placeholder)
+        function showRepositories() {
+            alert('Repositories section - Feature coming soon!');
+        }
+
+        function showProjects() {
+            alert('Projects section - Feature coming soon!');
+        }
+
+        function showIssues() {
+            alert('Issues section - Feature coming soon!');
+        }
+
+        function showPullRequests() {
+            alert('Pull Requests section - Feature coming soon!');
+        }
+
+        // Initialize chat with welcome message
+        document.addEventListener('DOMContentLoaded', function() {
+            // Chat is initialized with the welcome message in HTML
+        });
+    </script>
+</body>
+</html>
